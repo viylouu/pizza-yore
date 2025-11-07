@@ -1,0 +1,3 @@
+[submodule "tail-engine"]
+	path = tail
+	url = https://github.com/viylouu/tail-engine.git
