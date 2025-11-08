@@ -33,7 +33,7 @@ public:
                 .tint = v4{1},
                 .sample = sample
             };
-            pbod_r2d->cams.push_back(cam_cam);
+            pbod_r2d->cams.push_back(NULL);
 
             pbod->scale = v3{sample.z,sample.w,1};
         }
