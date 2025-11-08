@@ -5,6 +5,10 @@ public:
     void init(tail::Settings* sets) {
         sets->bgcolor = v3{.2,.4,.3};
 
+        tail::Node* camn = scene->add_child(new tail::Node());
+        tail::Camera* cam = (tail::Camera*)camn->add_component(new tail::Camera(480,270));
+        cam->is_master = true;
+
         v4 sample{0,0,16,32};
 
         tail::Node* n = scene->add_child(new tail::Node());
@@ -14,6 +18,7 @@ public:
             .tint = v4{1},
             .sample = sample
         };
+        c->cams.push_back(cam);
 
         n->scale = v3{sample.z,sample.w,1};
     }
