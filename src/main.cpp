@@ -3,7 +3,7 @@
 class Game : public tail::Program {
 public:
     void init(tail::Settings* sets) {
-        sets->bgcolor = v3{.5,.5,.5};
+        sets->bgcolor = v3{.2,.4,.3};
 
         tail::Node* camn = scene->add_child(new tail::Node());
         tail::Camera* cam = (tail::Camera*)camn->add_component(new tail::Camera(480,270));
