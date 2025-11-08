@@ -2,8 +2,28 @@
 
 class Game : public tail::Program {
 public:
+    struct {
+        struct {
+            tail::Texture* player;
+
+            void load() {
+                player = new tail::Texture("data/sprites/player.png");
+            }
+            
+            void unload() {
+                delete player;
+            }
+        } tex;
+    } data;
+
+    struct {
+        
+    } state;
+
     void init(tail::Settings* sets) {
         sets->bgcolor = v3{.2,.4,.3};
+
+        data.tex.load();
 
         tail::Node* cam = scene->add_child(new tail::Node());
         cam->name = "camera";
@@ -16,13 +36,17 @@ public:
         pbod->name = "player body";
         tail::Renderer2d* pbod_r2d = (tail::Renderer2d*)pbod->add_component(new tail::Renderer2d());
         pbod_r2d->typedata = tail::Renderer2d::Tex{ 
-            .tex = new tail::Texture("data/sprites/player.png"), 
+            .tex = data.tex.player, 
             .tint = v4{1},
             .sample = sample
         };
         pbod_r2d->cams.push_back(cam_cam);
 
         pbod->scale = v3{sample.z,sample.w,1};
+    }
+
+    void exit() {
+        data.tex.unload();
     }
 };
 
