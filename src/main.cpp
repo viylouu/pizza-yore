@@ -36,6 +36,8 @@ public:
             pbod_r2d->cams.push_back(cam_cam);
 
             pbod->scale = v3{sample.z,sample.w,1};
+
+            cam->scale = v3{1,1,1};
         }
     } state;
 
