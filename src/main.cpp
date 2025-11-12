@@ -21,12 +21,12 @@ public:
             v4 pbod_sample{0,0,16,32};
             v4 phand_sample{16,0,16,16};
 
-            tail::Node* player = scene->add_child(new tail::Node());
+            tail::Node* player = (new tail::Node())->add_to(scene);
             player->name = "player";
 
-            tail::Node* pbod = player->add_child(new tail::Node());
+            tail::Node* pbod = (new tail::Node())->add_to(player);
             pbod->name = "player body";
-            tail::Renderer2d* pbod_r2d = (tail::Renderer2d*)pbod->add_component(new tail::Renderer2d());
+            tail::Renderer2d* pbod_r2d = (new tail::Renderer2d())->add_to(pbod);
             pbod_r2d->typedata = tail::Renderer2d::Tex{ 
                 .tex = data.tex.player, 
                 .tint = v4{1},
@@ -35,9 +35,9 @@ public:
             pbod_r2d->cams.push_back(cam);
             pbod->scale = v3{pbod_sample.z,pbod_sample.w,1};
 
-            tail::Node* phandL = player->add_child(new tail::Node());
+            tail::Node* phandL = (new tail::Node())->add_to(player);
             phandL->name = "player hand (L)";
-            tail::Renderer2d* phandL_r2d = (tail::Renderer2d*)phandL->add_component(new tail::Renderer2d());
+            tail::Renderer2d* phandL_r2d = (new tail::Renderer2d())->add_to(phandL);
             phandL_r2d->typedata = tail::Renderer2d::Tex{
                 .tex = data.tex.player,
                 .tint = v4{1},
@@ -50,7 +50,7 @@ public:
         void load_scene_generics(tail::Node* scene, assetdata& data) {
             tail::Node* cam = scene->add_child(new tail::Node());
             cam->name = "camera";
-            tail::Camera* cam_cam = (tail::Camera*)cam->add_component(new tail::Camera(480,270));
+            tail::Camera* cam_cam = (new tail::Camera(480,270))->add_to(cam);
             cam_cam->is_master = true;
 
             load_scene_player(scene, data, cam_cam);
