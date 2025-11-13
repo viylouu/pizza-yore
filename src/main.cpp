@@ -4,8 +4,6 @@
 
 class Player : public tail::Component {
 public:
-    tail::Node* body;
-
     tail::Node* handL;
     tail::Node* handR;
 
@@ -63,12 +61,6 @@ public:
 
             handL->pos = handLPos;
             handR->pos = handRPos;
-        }
-
-        { // body movement
-            v3 del = body->pos - cammouse;
-            f32 bodyTarg = std::atan2(-del.y,del.x) + 3.14159f*.5f;
-            body->rot.z = bodyTarg;
         }
     }
 };
@@ -134,8 +126,6 @@ public:
             player_p->handL = phandL;
             player_p->handR = phandR;
             player_p->cam = cam;
-
-            player_p->body = pbod;
         }
 
         void load_scene_generics(tail::Node* scene, assetdata& data) {
