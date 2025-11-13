@@ -1,4 +1,25 @@
 #include <tail.hpp>
+#include <wraps/input.hpp>
+
+class Player : public tail::Component {
+public:
+    tail::Node* handL;
+    tail::Node* handR;
+
+    tail::Camera* cam;
+
+public:
+    Player* add_to(tail::Node* parent) {
+        return (Player*)parent->add_component((Component*)this);
+    }
+
+    void update(f32 dt) {
+        UNUSED(dt);
+
+        handL->pos = cam->mouse_to_this(tail::get_mouse_pos());
+        ///printf("%f,%f,%f\n", handL->pos.x, handL->pos.y, handL->pos.z);
+    }
+};
 
 class Game : public tail::Program {
 public:
@@ -23,6 +44,7 @@ public:
 
             tail::Node* player = (new tail::Node())->add_to(scene);
             player->name = "player";
+            Player* player_p = (new Player())->add_to(player);
 
             tail::Node* pbod = (new tail::Node())->add_to(player);
             pbod->name = "player body";
@@ -45,6 +67,21 @@ public:
             };
             phandL_r2d->cams.push_back(cam);
             phandL->scale = v3{phand_sample.z,phand_sample.w,1};
+
+            tail::Node* phandR = (new tail::Node())->add_to(player);
+            phandR->name = "player hand (R)";
+            tail::Renderer2d* phandR_r2d = (new tail::Renderer2d())->add_to(phandR);
+            phandR_r2d->typedata = tail::Renderer2d::Tex{
+                .tex = data.tex.player,
+                .tint = v4{1},
+                .sample = phand_sample
+            };
+            phandR_r2d->cams.push_back(cam);
+            phandR->scale = v3{phand_sample.z,phand_sample.w,1};
+
+            player_p->handL = phandL;
+            player_p->handR = phandR;
+            player_p->cam = cam;
         }
 
         void load_scene_generics(tail::Node* scene, assetdata& data) {
