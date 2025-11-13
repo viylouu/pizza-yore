@@ -1,10 +1,25 @@
 #include <tail.hpp>
 #include <wraps/input.hpp>
+#include <cmath>
 
 class Player : public tail::Component {
 public:
+    tail::Node* body;
+
     tail::Node* handL;
     tail::Node* handR;
+
+    v3 handLRest = v3{-8,0,0};
+    v3 handRRest = v3{8,0,0};
+
+    f32 restOffAmt = .02f;
+    f32 grabOffAmt = .18f;
+
+    v3 handLVel = v3{0,0,0};
+    v3 handRVel = v3{0,0,0};
+
+    v3 handLPos = v3{0,0,0};
+    v3 handRPos = v3{0,0,0};
 
     tail::Camera* cam;
 
@@ -14,9 +29,47 @@ public:
     }
 
     void update(f32 dt) {
-        UNUSED(dt);
+        if (dt > .2f) return;
 
-        handL->pos = cam->mouse_to_this(tail::get_mouse_pos());
+        bool lgrab = get_mouse(tail::Mouse::LEFT);
+        bool rgrab = get_mouse(tail::Mouse::RIGHT);
+
+        v3 cammouse = cam->mouse_to_this();
+
+        { // hand movement
+            v3 handLTarg = cammouse - handLRest;
+            v3 handRTarg = cammouse - handRRest;
+
+            if (lgrab) handLTarg *= grabOffAmt;
+            else handLTarg *= restOffAmt;
+            if (rgrab) handRTarg *= grabOffAmt;
+            else handRTarg *= restOffAmt;
+
+            handLTarg += handLRest;
+            handRTarg += handRRest;
+
+            const f32 d = 12, k = 256;
+
+            v3 x, a;
+            x = handLPos - handLTarg;
+            a = (x * -k) - (handLVel * d);
+            handLVel += a * dt;
+            handLPos += handLVel * dt;
+
+            x = handRPos - handRTarg;
+            a = (x * -k) - (handRVel * d);
+            handRVel += a * dt;
+            handRPos += handRVel * dt;
+
+            handL->pos = handLPos;
+            handR->pos = handRPos;
+        }
+
+        { // body movement
+            v3 del = body->pos - cammouse;
+            f32 bodyTarg = std::atan2(-del.y,del.x) + 3.14159f*.5f;
+            body->rot.z = bodyTarg;
+        }
     }
 };
 
@@ -81,6 +134,8 @@ public:
             player_p->handL = phandL;
             player_p->handR = phandR;
             player_p->cam = cam;
+
+            player_p->body = pbod;
         }
 
         void load_scene_generics(tail::Node* scene, assetdata& data) {
