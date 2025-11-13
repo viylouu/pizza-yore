@@ -17,7 +17,6 @@ public:
         UNUSED(dt);
 
         handL->pos = cam->mouse_to_this(tail::get_mouse_pos());
-        ///printf("%f,%f,%f\n", handL->pos.x, handL->pos.y, handL->pos.z);
     }
 };
 
@@ -89,6 +88,7 @@ public:
             cam->name = "camera";
             tail::Camera* cam_cam = (new tail::Camera(480,270))->add_to(cam);
             cam_cam->is_master = true;
+            cam_cam->bgcolor = v3{.2,.4,.3};
 
             load_scene_player(scene, data, cam_cam);
         }
