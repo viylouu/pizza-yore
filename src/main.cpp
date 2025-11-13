@@ -11,13 +11,10 @@ public:
     v3 handRRest = v3{8,0,0};
 
     f32 restOffAmt = .02f;
-    f32 grabOffAmt = .18f;
+    f32 grabOffAmt = .24f;
 
     v3 handLVel = v3{0,0,0};
     v3 handRVel = v3{0,0,0};
-
-    v3 handLPos = v3{0,0,0};
-    v3 handRPos = v3{0,0,0};
 
     tail::Camera* cam;
 
@@ -32,7 +29,13 @@ public:
         bool lgrab = get_mouse(tail::Mouse::LEFT);
         bool rgrab = get_mouse(tail::Mouse::RIGHT);
 
-        v3 cammouse = cam->mouse_to_this();
+        v3 cammouse = cam->mouse_to_this() - node->pos;
+
+        f32 mag = std::sqrt(cammouse.x*cammouse.x + cammouse.y*cammouse.y);
+        mag = std::fmin(mag, 80);
+        v3 normed = cammouse / mag;
+
+        cammouse = normed * mag + node->pos;
 
         { // hand movement
             v3 handLTarg = cammouse - handLRest;
@@ -49,18 +52,15 @@ public:
             const f32 d = 12, k = 256;
 
             v3 x, a;
-            x = handLPos - handLTarg;
+            x = handL->pos - handLTarg;
             a = (x * -k) - (handLVel * d);
             handLVel += a * dt;
-            handLPos += handLVel * dt;
+            handL->pos += handLVel * dt;
 
-            x = handRPos - handRTarg;
+            x = handR->pos - handRTarg;
             a = (x * -k) - (handRVel * d);
             handRVel += a * dt;
-            handRPos += handRVel * dt;
-
-            handL->pos = handLPos;
-            handR->pos = handRPos;
+            handR->pos += handRVel * dt;
         }
     }
 };
