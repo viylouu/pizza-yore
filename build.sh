@@ -7,8 +7,8 @@ CFLAGS="-std=c99"
 CPP_FLAGS="-std=gnu++17"
 COMPILER=("g++")
 CFLAGS_COMP="-pedantic -Wall -Wextra -Werror -Wno-initializer-overrides -Wno-override-init -Wno-cast-function-type"
-CPP_FLAGS_COMP="-Wall -Wextra -Werror"
-FLAGS_COMP="-Ifurry -Ifurry/deps -Itail/furry -Itail/furry/deps -Ideps -I. -Itail/deps -Itail -isystem"
+CPP_FLAGS_COMP="-Wall -Wextra -Werror -fno-exceptions"
+FLAGS_COMP="-Ifurry -Ifurry/deps -Itail/furry -Itail/furry/deps -Ideps -I. -Itail/deps -Itail -Ideps/imgui -Itail/deps/imgui -isystem"
 FLAGS_LINK=""
 
 BUILD_TEST=false
