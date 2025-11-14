@@ -17,6 +17,7 @@ public:
     v3 handRVel = v3{0,0,0};
 
     tail::Camera* cam;
+    f32 camoff = .03f;
 
 public:
     Player* add_to(tail::Node* parent) {
@@ -32,8 +33,8 @@ public:
         v3 cammouse = cam->mouse_to_this() - node->pos;
 
         f32 mag = std::sqrt(cammouse.x*cammouse.x + cammouse.y*cammouse.y);
-        mag = std::fmin(mag, 80);
         v3 normed = cammouse / mag;
+        mag = std::fmin(mag, 120);
 
         cammouse = normed * mag + node->pos;
 
@@ -61,6 +62,8 @@ public:
             a = (x * -k) - (handRVel * d);
             handRVel += a * dt;
             handR->pos += handRVel * dt;
+
+            cam->node->pos = node->pos + cammouse * camoff;
         }
     }
 };
