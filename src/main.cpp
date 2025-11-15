@@ -19,6 +19,49 @@ public:
     tail::Camera* cam;
     f32 camoff = .03f;
 
+    f32 maxDist = 120;
+
+public:
+    void init() {
+        name = "Player Component";
+
+        vars.push_back(tail::Variable{
+                &handLRest, sizeof(v3),
+                tail::VarType::VECTOR_3, 
+                "left hand rest pos", NULL
+            });
+
+        vars.push_back(tail::Variable{
+                &handRRest, sizeof(v3),
+                tail::VarType::VECTOR_3, 
+                "right hand rest pos", NULL
+            });
+
+        vars.push_back(tail::Variable{
+                &maxDist, sizeof(f32),
+                tail::VarType::FLOAT,
+                "maximum mouse distance", NULL
+            });
+
+        vars.push_back(tail::Variable{
+                &camoff, sizeof(f32),
+                tail::VarType::FLOAT,
+                "camera offset (by mouse)", NULL
+            });
+
+        vars.push_back(tail::Variable{
+                &restOffAmt, sizeof(f32),
+                tail::VarType::FLOAT, 
+                "hand resting offset (by mouse)", NULL
+            });
+
+        vars.push_back(tail::Variable{
+                &grabOffAmt, sizeof(f32),
+                tail::VarType::FLOAT, 
+                "hand grabbing offset (by mouse)", NULL
+            });
+    }
+
 public:
     Player* add_to(tail::Node* parent) {
         return (Player*)parent->add_component((Component*)this);
@@ -34,7 +77,7 @@ public:
 
         f32 mag = std::sqrt(cammouse.x*cammouse.x + cammouse.y*cammouse.y);
         v3 normed = cammouse / mag;
-        mag = std::fmin(mag, 120);
+        mag = std::fmin(mag, maxDist);
 
         cammouse = normed * mag + node->pos;
 
